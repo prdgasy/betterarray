@@ -1,2 +1,1 @@
-import { MCFunction } from 'sandstone';
-
+export { PGDataArray } from './src/arrayClass';
