@@ -1,0 +1,26 @@
+{
+  "name": "sandstone-template",
+  "version": "0.0.1",
+  "description": "A pack created with Sandstone",
+  "type": "module",
+  "module": "src/test.ts",
+  "scripts": {
+    "dev:watch": "sand watch",
+    "dev:build": "sand build",
+    "setup": "bun i"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "sandstone-cli": "^2.6.9"
+  },
+  "dependencies": {
+    "@prodigelib/easymacro": "https://github.com/prdgasy/easy-macro.git",
+    "sandstone": "~1.2.32"
+  },
+  "trustedDependencies": [
+    "@parcel/watcher"
+  ]
+}

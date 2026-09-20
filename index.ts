@@ -1,0 +1,2 @@
+import { MCFunction } from 'sandstone';
+
