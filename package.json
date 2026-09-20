@@ -1,5 +1,6 @@
 {
-  "name": "sandstone-template",
+  "name": "@prodigelib/betterarray",
+  "@prodigelib/betterarray": "github:prdgasy/betterarray",
   "version": "0.0.1",
   "description": "A pack created with Sandstone",
   "type": "module",
