@@ -18,7 +18,6 @@
     "sandstone-cli": "^2.6.9"
   },
   "dependencies": {
-    "@prodigelib/easymacro": "https://github.com/prdgasy/easy-macro.git",
     "sandstone": "~1.2.36"
   },
   "trustedDependencies": [

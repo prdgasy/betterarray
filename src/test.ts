@@ -1,14 +1,13 @@
-import { MCFunction } from "sandstone";
-import { PGDataArray } from "./arrayClass";
-import { macro as $, richTellraw } from "@prodigelib/easymacro";
+import { MCFunction, tellraw } from "sandstone";
+import { CjArray } from "./arrayClass";
 
 MCFunction('test', () => {
-  const array = new PGDataArray('name');
+  const array = new CjArray('name');
   array.push('a');
   array.push('b');
   array.push('c');
 
   array.forEach((e, i) => {
-    richTellraw([$`e: ${e}, i: ${i}`]);
+    console.log(`e: ${e.currentTarget}::${e.path}, i: ${i.toString()} `);
   })
 })

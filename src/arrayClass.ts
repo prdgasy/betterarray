@@ -1,18 +1,19 @@
-import { _, Data, DataPointClass, execute, Macro as $, MCFunction, Objective, Score, Variable } from "sandstone";
+import { _, Data, DataPointClass, defaultNamespace, execute, Macro as $, MCFunction, Objective, Score, Variable } from "sandstone";
 
-export class PGDataArray {
+export class CjArray {
   private static id = 0;
-  private static storage = Data('storage', 'prodigelib:prodigelib', 'PGDataArray')
+  private static ns = defaultNamespace.toString();
+  private static storage = Data('storage', `${this.ns}:prodigelib`, 'CjArray')
   private static arrays = this.storage.select('arrays');
 
   private name: string;
   private length = Objective.create('lib.array.length')('.l');
   private array: DataPointClass;
-  private out = PGDataArray.storage.select('out');
+  private out = CjArray.storage.select('out');
 
   constructor(name?: string) {
-    this.name = name ?? `anon_${PGDataArray.id++}`;
-    this.array = PGDataArray.arrays.select(this.name);
+    this.name = name ?? `anon_${CjArray.id++}`;
+    this.array = CjArray.arrays.select(this.name);
   }
 
   /**
@@ -37,7 +38,10 @@ export class PGDataArray {
    * @param e Element
    * @param i Index
    */
-  forEach(callback: (e: DataPointClass, i?: Score) => void) {
+  forEach(callback: (e: DataPointClass, i: Score) => void): void;
+  forEach(callback: (e: DataPointClass) => void): void;
+
+  forEach(callback: (e: DataPointClass, i: Score) => void) {
     const forEach = MCFunction(`lib/array/for_each/${this.name}`, () => {
       _.for([0, this.getLength()], 'iterate', (i) => {
         const e = this.out.select('e');

@@ -1,1 +1,1 @@
-export { PGDataArray } from './src/arrayClass';
+export * from './src/arrayClass';
