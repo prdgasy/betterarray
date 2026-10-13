@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@prodigelib/easymacro": "https://github.com/prdgasy/easy-macro.git",
-    "sandstone": "~1.2.32"
+    "sandstone": "~1.2.36"
   },
   "trustedDependencies": [
     "@parcel/watcher"
