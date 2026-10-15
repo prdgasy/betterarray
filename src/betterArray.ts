@@ -29,20 +29,24 @@ export class BetterArray<T extends number | string> {
     return this.length;
   }
 
-  public forEach(callback: (e: DataPointClass, i: Score) => void): FinalCommandOutput;
-  public forEach(callback: (e: DataPointClass) => void): FinalCommandOutput;
+  private getFromScore(i: Score | DataPointClass) {
+    const getElement = MCFunction(`lib/array/get_from_score/${this.name}`, (_loop: any, i: Score | DataPointClass) => {
+      $.data.modify(this.out).set.from(this.array.select($`[${i}]`));
+    }, { onConflict: 'ignore' });
+    getElement(i);
+    return this.out;
+  }
 
-  public forEach(callback: (e: DataPointClass, i: Score) => void) {
+  public get(i: number | Score | DataPointClass): DataPointClass {
+    if (typeof i === 'number') return this.array.select(`[${i}]`);
+    return this.getFromScore(i);
+  }
+
+  public forEach(callback: (element: DataPointClass, index: Score) => void): FinalCommandOutput;
+  public forEach(callback: (element: DataPointClass) => void): FinalCommandOutput;
+  public forEach(callback: (element: DataPointClass, index: Score) => void) {
     const forEach = MCFunction(`lib/array/for_each/${this.name}`, () => {
-      _.for([0, this.getLength()], 'iterate', (i) => {
-        const e = this.out.select('e');
-        const getElement = MCFunction(`lib/array/get_element/${this.name}`, (_loop: any, i: Score) => {
-          $.data.modify(e).set.from(this.array.select($`[${i}]`));
-          this.out.select('i').set(i);
-        });
-        getElement(i);
-        callback(e, i);
-      });
+      _.for([0, this.getLength()], 'iterate', (i) => callback(this.getFromScore(i), i));
     });
     return forEach();
   }
