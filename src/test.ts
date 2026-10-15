@@ -1,13 +1,12 @@
 import { MCFunction, tellraw } from "sandstone";
-import { CjArray } from "./arrayClass";
+import { BetterArray } from "./betterArray";
 
 MCFunction('test', () => {
-  const array = new CjArray('name');
+  const array = new BetterArray<string>('name');
   array.push('a');
-  array.push('b');
-  array.push('c');
+
 
   array.forEach((e, i) => {
-    console.log(`e: ${e.currentTarget}::${e.path}, i: ${i.toString()} `);
+    console.log(`e: ${e.currentTarget}::${e.path}, i: ${i.toString()}`);
   })
 })
