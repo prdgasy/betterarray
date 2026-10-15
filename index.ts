@@ -1,1 +1,1 @@
-export * from './src/arrayClass';
+export * from './src/betterArray';
