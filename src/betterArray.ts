@@ -12,9 +12,10 @@ export class BetterArray<T extends number | string> {
   private array: DataPointClass;
   private out = BetterArray.storage.select('out');
 
-  constructor(name?: string) {
-    this.name = name ?? `anon_${BetterArray.id++}`;
+  constructor(arr?: T[]) {
+    this.name = `arr_${BetterArray.id++}`;
     this.array = BetterArray.arrays.select(this.name);
+    this.array.set(arr ?? []);
   }
 
   public push(...values: T[]): this {
@@ -30,7 +31,7 @@ export class BetterArray<T extends number | string> {
   }
 
   private getFromScore(i: Score | DataPointClass) {
-    const getElement = MCFunction(`lib/array/get_from_score/${this.name}`, (_loop: any, i: Score | DataPointClass) => {
+    const getElement = MCFunction(`__lib/array/get_from_score/${this.name}`, (_loop: any, i: Score | DataPointClass) => {
       $.data.modify(this.out).set.from(this.array.select($`[${i}]`));
     }, { onConflict: 'ignore' });
     getElement(i);
@@ -45,7 +46,7 @@ export class BetterArray<T extends number | string> {
   public forEach(callback: (element: DataPointClass, index: Score) => void): FinalCommandOutput;
   public forEach(callback: (element: DataPointClass) => void): FinalCommandOutput;
   public forEach(callback: (element: DataPointClass, index: Score) => void) {
-    const forEach = MCFunction(`lib/array/for_each/${this.name}`, () => {
+    const forEach = MCFunction(`__lib/array/for_each/${this.name}`, () => {
       _.for([0, this.getLength()], 'iterate', (i) => callback(this.getFromScore(i), i));
     });
     return forEach();
