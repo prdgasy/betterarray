@@ -1,35 +1,40 @@
-import { Macro as $, _, Data, DataPointClass, DataVariable, defaultNamespace, execute, MCFunction, Objective, Score } from "sandstone";
+import { Macro as $, _, Data, DataPointClass, DataVariable, defaultNamespace, execute, MCFunction, Objective, Score, Variable } from "sandstone";
 import { FinalCommandOutput } from "sandstone/commands";
+import { MacroLiteral } from "sandstone/core";
 
-export class BetterArray<T extends number | string> {
+export class BetterArray {
 	private static nextId = 0;
 	private static ns = defaultNamespace.toString();
 	private static storage = Data('storage', `${this.ns}:prodigelib`, 'BetterArray')
 	private static arrays = this.storage.select('arrays');
 
 	private name: string;
-	private length = Objective.create('lib.array.length')('.l');
 	private array: DataPointClass;
 	private out: DataPointClass;
 	private id = BetterArray.nextId++;
 
-	constructor(arr?: T[]) {
+	constructor(arr?: any[]) {
 		this.name = `arr_${this.id}`;
 		this.out = BetterArray.storage.select(`out_${this.id}`);
 		this.array = BetterArray.arrays.select(this.name);
 		this.array.set(arr ?? []);
 	}
 
-	public push(...values: T[]): this {
+	public push(...values: any[]): this {
 		for (const v of values) {
 			this.array.append(v);
 		}
 		return this;
 	}
 
-	public getLength(): Score {
-		execute.store.result(this.length).run.data.get(this.array);
-		return this.length;
+	public toData(): DataPointClass {
+		return this.array;
+	}
+
+	public length(): Score {
+		const l = Variable();
+		execute.store.result(l).run.data.get(this.array);
+		return l;
 	}
 
 	private getFromScore(i: Score | DataPointClass): DataPointClass {
@@ -50,9 +55,13 @@ export class BetterArray<T extends number | string> {
 	public forEach(callback: (element: DataPointClass) => void): FinalCommandOutput;
 	public forEach(callback: (element: DataPointClass, index: Score) => void) {
 		const forEach = MCFunction(`__lib/array/for_each/${this.name}`, () => {
-			_.for([0, this.getLength()], 'iterate', (i) => callback(this.getFromScore(i), i));
+			_.for([0, this.length()], 'iterate', (i) => callback(this.getFromScore(i), i));
 		});
 		return forEach();
+	}
+
+	public map(callback: (e: DataPointClass) => MacroLiteral) {
+
 	}
 
 	public static uninstall() {
